@@ -24,7 +24,7 @@ export default function Header() {
                 <FaMoon/>
             </Button>
             <Link to='/signin' >
-              <Button className='bg-gradient-to-r from-purple-500 to-blue-500'>Signin</Button>
+              <Button className='bg-gradient-to-r from-purple-500 to-blue-500' outline>Signin</Button>
             </Link>
             <Navbar.Toggle/>
         </div>
