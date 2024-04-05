@@ -1,14 +1,13 @@
-import mongoose from "mongoose";
-import { string } from "prop-types";
+import mongoose from "mongoose"
 
-userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username:{
         type:String,
         require:true,
         unique:true
     },
     email:{
-        type:string,
+        type:String,
         require:true,
         unique:true
     },
@@ -18,6 +17,6 @@ userSchema = new mongoose.Schema({
     }
 },{timestamps:true});
 
-const user = mongoose.model('user',userSchema);
+const User = mongoose.model('User',userSchema);
 
-export default user
+export default User
