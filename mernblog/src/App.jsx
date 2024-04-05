@@ -7,7 +7,7 @@ import Signin from './Pages/signin'
 import Signup from './Pages/signup'
 import Projects from './Pages/projects'
 import Header from './Components/Header'
-
+import FooterComp from './Components/Footer'
 
 export default function App() {
   return (
@@ -25,7 +25,7 @@ export default function App() {
     <Route path='projects/' element = {<Projects/>}/>
 
     </Routes>
-    
+    <FooterComp/>
     </BrowserRouter>
   )
 }
