@@ -42,6 +42,9 @@ export default function FooterComp() {
                    </Footer.Link>
                </Footer.LinkGroup>
                </div>
+               {/* <Footer.Divider>
+                <Footer.Copyright href='#' by=" Milan's Blog " />
+               </Footer.Divider> */}
             </div>
         </div>
 

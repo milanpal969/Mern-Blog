@@ -1,32 +1,38 @@
 import React, { useState } from 'react'
 import { Link,useNavigate } from 'react-router-dom' 
 import {Label, TextInput,Button, Alert} from 'flowbite-react'
-
+import Oauth from '../Components/Oauth';
 
 export default function Signup() {
 
   const [formdata , setdata] = useState({});
   const [errormessage, seterror]  = useState(null);
+  const [cnt, setcount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const navigate  = useNavigate()
 
 
   function handlechange(e){
-    setdata({...formdata, [e.target.id] :e.target.value.trim()})
+    setdata({...formdata , [e.target.id] :e.target.value.trim()})
   }
 
-   async function handlesubmit(e){
-    e.preventDefault();
+  async function handlesubmit(e){
     
-    if(!formdata.username || !formdata.email || !fromdata.password){
+    e.preventDefault();
+    if(!formdata.username || !formdata.email || !formdata.pass){
       return seterror('please fill all fields')
     }
+    
+   
     try{
+      seterror(null);
+      setLoading(true);
       const res = await fetch('/api/auth/signup',{
         method:"POST",
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify(formdata),
       })
-
+      setLoading(false);
       const data = res.json();
 
       if(data.success===false){
@@ -54,7 +60,7 @@ export default function Signup() {
 
 
         <form onSubmit={handlesubmit}>
-          <div >
+          <div>
             <Label value= 'your username'/>
             <TextInput type = 'text' placeholder = 'Username' id='username' onChange={handlechange}/>
           </div>
@@ -66,14 +72,14 @@ export default function Signup() {
             <Label value= 'your Password'/>
             <TextInput type = 'password' placeholder = 'Password' id='pass' onChange={handlechange}/>
           </div>
-          <Button className='mt-2 mx-auto w-[100%]' gradientDuoTone= 'purpleToPink' type='submit'>Sing up</Button>
+          <Button className='mt-2 mx-auto w-[100%]' gradientDuoTone= 'purpleToPink' type='submit'>{loading ? <span>Loading...</span> : <span>Sign Up</span> }</Button>
+          <Oauth/>
         </form>
         <div className=" text-sm mt-5 flex gap-2" >
           <span>Have an account? </span>
-          <Link to='/signup' className='text-blue-500'>Sign up</Link>
-        </div>
-        </div>
 
+          <Link to='/signin' className='text-blue-500'>Sign In</Link>
+        </div>
         {
           errormessage && (
             <Alert className = 'mt-5' color = 'failure'>
@@ -81,6 +87,9 @@ export default function Signup() {
             </Alert>
           )
         }
+        </div>
+
+       <Button onClick={()=>{setcount(cnt+1)}}>count {cnt}</Button>
     </div>
   )
 }
