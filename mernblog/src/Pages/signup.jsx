@@ -7,45 +7,48 @@ export default function Signup() {
 
   const [formdata , setdata] = useState({});
   const [errormessage, seterror]  = useState(null);
-  const [cnt, setcount] = useState(0);
   const [loading, setLoading] = useState(false);
   const navigate  = useNavigate()
 
 
   function handlechange(e){
-    setdata({...formdata , [e.target.id] :e.target.value.trim()})
+    setdata({...formdata , [e.target.id] : e.target.value.trim()});
   }
 
-  async function handlesubmit(e){
-    
+  async function handlesubmit(e) {
     e.preventDefault();
-    if(!formdata.username || !formdata.email || !formdata.pass){
-      return seterror('please fill all fields')
+    if (!formdata.username || !formdata.email || !formdata.password) {
+        return seterror('Please fill all fields');
     }
-    
    
-    try{
-      seterror(null);
-      setLoading(true);
-      const res = await fetch('/api/auth/signup',{
-        method:"POST",
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(formdata),
-      })
-      setLoading(false);
-      const data = res.json();
-
-      if(data.success===false){
-        return seterror(data.message);
-      }
-
-      if(res.ok){
-        navigate('/signin')
-      }
-    }catch(error){
-    seterror(error.message);
+    try {
+      
+        seterror(null);
+        setLoading(true);
+        
+        const res = await fetch('http://localhost:3000/api/auth/signup', {
+          
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formdata),
+            mode:'no-cors',
+        });
+        const data = await res.json();
+        console.log(data);
+        setLoading(false);
+        if (!res.ok) {
+            const errorData = await res.json();
+           
+            throw new Error(errorData.message);
+        }
+        
+        navigate('/signin');
+    } catch(error) {
+      
+        seterror(error.message);
     }
-  }
+}
+
 
   return (
     <div className=' flex  mx-auto mt-20 flex-col md:flex-row max-w-3xl gap-5'>
@@ -70,7 +73,7 @@ export default function Signup() {
           </div>
           <div >
             <Label value= 'your Password'/>
-            <TextInput type = 'password' placeholder = 'Password' id='pass' onChange={handlechange}/>
+            <TextInput type = 'password' placeholder = '******' id='password' onChange={handlechange}/>
           </div>
           <Button className='mt-2 mx-auto w-[100%]' gradientDuoTone= 'purpleToPink' type='submit'>{loading ? <span>Loading...</span> : <span>Sign Up</span> }</Button>
           <Oauth/>
@@ -88,8 +91,6 @@ export default function Signup() {
           )
         }
         </div>
-
-       <Button onClick={()=>{setcount(cnt+1)}}>count {cnt}</Button>
     </div>
   )
 }

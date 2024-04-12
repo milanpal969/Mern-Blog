@@ -1,9 +1,10 @@
 import express from 'express'
-import { signup, signin } from '../controlers/auth.controler.js'; // Corrected typo
+import { signup, signin,googleAuth } from '../controlers/auth.controler.js'; 
 
 const router = express.Router();
 
-router.post('/signup', signup); // Corrected endpoint name
-router.post('/signin', signin); // Corrected endpoint name
+router.post('/signup', signup); 
+router.post('/signin', signin); 
+router.post('/google', googleAuth);
 
 export default router;

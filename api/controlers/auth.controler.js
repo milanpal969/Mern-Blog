@@ -5,12 +5,13 @@ import jwt from 'jsonwebtoken'
 export const signup = async (req, res) => {
     const { username, email, password } = req.body;
 
-    if (!username || !email || !password) {
-        return res.status(400).json({
-            msg: "All fields are required"
-        });
-    }
-    
+  console.log('Received data:', req.body); 
+
+  if (!username || !email || !password) {
+    return res.status(400).json({
+      msg: "All fields are required"
+    });
+  }
     const hashpassword = bcryptjs.hashSync(password);
     try {
         const newUser = await User.create({
@@ -32,7 +33,7 @@ export const signup = async (req, res) => {
 };
 
 
-export const signin = async (res,req)=>{
+export const signin = async (req,res)=>{
 
     const {email,password} = req.body;
 
@@ -42,6 +43,7 @@ export const signin = async (res,req)=>{
 
     try{
     const validUser = await User.findOne({email});
+
     const validPassword = bcryptjs.compareSync(password,validUser.password);
     if(!validUser  || !validPassword){
         res.status(404).json({
@@ -64,3 +66,35 @@ export const signin = async (res,req)=>{
     }
 
 };
+
+
+export const googleAuth = async (req,res) => {
+
+    const {name, email, photoUrl} = req.body;
+
+    try{
+        const chk = await User.findOne({email});
+
+        if(chk){
+            const token = jwt.sign({id:chk._id},process.env.jwtPassword);
+            res.status(200).json(token);
+
+        }else{
+            const generatedPassword = Math.random().toString().slice(-8);
+            const hashpassword = bcryptjs.hashSync(generatedPassword,8);
+
+            const newUser = User.create({
+                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4),
+                email,
+                password:hashpassword,
+                profilePic:photoUrl
+        });
+        await newUser.save();
+        const token = jwt.sign({id:newUser._id},process.env.jwtPassword);
+        res.status(200).json(token);
+        }
+    }
+    catch(err){
+        console.log(err);
+    }
+}
